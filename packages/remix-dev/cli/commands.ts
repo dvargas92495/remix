@@ -21,6 +21,7 @@ import { createApp } from "./create";
 import { loadEnv } from "../env";
 import { log } from "../logging";
 import { setupRemix, isSetupPlatform, SetupPlatform } from "./setup";
+import * as esbuild from "esbuild";
 
 export * as migrate from "./migrate";
 
@@ -63,9 +64,16 @@ export async function init(
   packageManager: "npm" | "yarn" | "pnpm"
 ) {
   let initScriptDir = path.join(projectDir, "remix.init");
+  let initScriptTs = path.resolve(initScriptDir, "index.ts");
   let initScript = path.resolve(initScriptDir, "index.js");
-
   let isTypeScript = fse.existsSync(path.join(projectDir, "tsconfig.json"));
+  if (await fse.pathExists(initScriptTs)) {
+    await esbuild.build({
+      entryPoints: [initScriptTs],
+      platform: "node",
+      outfile: initScript,
+    })
+  }
 
   if (await fse.pathExists(initScript)) {
     execSync(`${packageManager} install`, {
@@ -73,6 +81,9 @@ export async function init(
       cwd: initScriptDir,
     });
     let initFn = require(initScript);
+    if (initFn.default) {
+      initFn = initFn.default;
+    }
     try {
       await initFn({ rootDirectory: projectDir, isTypeScript });
     } catch (error) {
