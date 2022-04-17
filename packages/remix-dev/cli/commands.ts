@@ -10,6 +10,7 @@ import type { Server } from "http";
 import type * as Express from "express";
 import type { createApp as createAppType } from "@remix-run/serve";
 import getPort, { makeRange } from "get-port";
+import * as esbuild from "esbuild";
 
 import { BuildMode, isBuildMode } from "../build";
 import * as colors from "../colors";
@@ -21,7 +22,6 @@ import { createApp } from "./create";
 import { loadEnv } from "../env";
 import { log } from "../logging";
 import { setupRemix, isSetupPlatform, SetupPlatform } from "./setup";
-import * as esbuild from "esbuild";
 
 export * as migrate from "./migrate";
 

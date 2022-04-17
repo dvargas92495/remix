@@ -246,7 +246,8 @@ async function extractLocalTarball(
     throw Error(
       "🚨 There was a problem extracting the file from the provided template.\n\n" +
         `  Template filepath: \`${filePath}\`\n` +
-        `  Destination directory: \`${projectDir}\``
+        `  Destination directory: \`${projectDir}\`\n` +
+        `  ${err}`
     );
   }
 }
