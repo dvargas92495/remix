@@ -86,7 +86,6 @@ export async function init(
       initFn = initFn.default;
     }
     try {
-      console.log("debug:" + require('fs').readFileSync(initScript).toString())
       await initFn({ rootDirectory: projectDir, isTypeScript });
     } catch (error) {
       if (error instanceof Error) {
