@@ -67,6 +67,9 @@ export async function init(
   let initScriptTs = path.resolve(initScriptDir, "index.ts");
   let initScript = path.resolve(initScriptDir, "index.js");
   let isTypeScript = fse.existsSync(path.join(projectDir, "tsconfig.json"));
+  console.log(initScriptDir);
+  console.log(initScriptTs);
+  console.log(await fse.pathExists(initScriptTs));
   if (await fse.pathExists(initScriptTs)) {
     await esbuild.build({
       entryPoints: [initScriptTs],
@@ -75,6 +78,8 @@ export async function init(
       outfile: initScript,
     })
   }
+  console.log(initScript);
+  console.log(await fse.pathExists(initScript));
 
   if (await fse.pathExists(initScript)) {
     execSync(`${packageManager} install`, {
@@ -82,6 +87,8 @@ export async function init(
       cwd: initScriptDir,
     });
     let initFn = require(initScript);
+    console.log(typeof initFn);
+    console.log(typeof initFn?.default);
     if (typeof initFn !== 'function' && initFn.default) {
       initFn = initFn.default;
     }
